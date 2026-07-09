@@ -5,7 +5,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13+-blue.svg?logo=python&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-v0.2.0-orange.svg)](#)
+[![Version](https://img.shields.io/badge/Version-v0.3.0-orange.svg)](#)
 
 </div>
 
