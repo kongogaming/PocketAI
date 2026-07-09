@@ -1,5 +1,5 @@
 {
-  "url": "http://YOUR_PHONE_IP:11434/api/generate",
-  "model": "gemma3:270m",
-  "version": "0.2.0"
+  "url": "http://localhost:11434/api/chat",
+  "model": "qwen2.5:1.5b",
+  "version": "0.3.0"
 }
