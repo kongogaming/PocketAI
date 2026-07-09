@@ -236,8 +236,4 @@ This project is licensed under the **MIT License**. See the `LICENSE` file for m
 * GitHub: [@kongogaming](https://www.google.com/search?q=https://github.com/kongogaming)
 * Repository: [PocketAI](https://github.com/kongogaming/PocketAI.git)
 
-```
 
-This layout gives your project a polished, open-source aesthetic right out of the box while making the instructions foolproof for new users. Let me know if you need to tweak the wording anywhere!
-
-```
