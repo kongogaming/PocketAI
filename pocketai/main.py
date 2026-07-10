@@ -1,274 +1,232 @@
 
-
 from config import config
 from ai import ask_ai
 import os
 import random
+from ui import (
+    show_dashboard,
+    show_help,
+    show_about,
+    show_config,
+    show_stats,
+    show_stats_status,
+    show_reset,
+    show_version,
+    status,
+    show_success,
+    show_warning,
+    show_error,
+    show_theme,
+    show_history,
+    show_usage,
+)
+from theme import get_theme, get_theme_icon, get_theme_name, set_theme, list_themes
+from storage import save_chat
+from storage import list_chats, load_chat, list_chats, delete_chat, rename_chat
 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
-def show_banner():
-    server = (
-        config["url"]
-        .replace("http://", "")
-        .replace("https://", "")
-        .replace("/api/chat", "")
-    )
-    WIDTH = 74  
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'🤖 PocketAI':^{WIDTH}}│")
-    print(f"│{'v' + config['version'] :^{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'🚀 Local AI Assistant powered by Ollama':^{WIDTH}}│")
-    print(f"│{'':<{WIDTH}}│")
-    print(f"│ {'🌐 Server':<10}: {server:<58}  │")
-    print(f"│ {'🧠 Model':<10}: {config['model']:<58}  │")
-    print(f"│ {'🔒 Mode':<10}: {'Local Only':<58}  │")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│ {'Type /help to view available commands.':<{WIDTH-1}}│")
-    print("└" + "─" * WIDTH + "┘")
-    print()
-
-def show_help():
-    WIDTH = 74
-
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'📖 PocketAI Help':^{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'':<{WIDTH}}│")
-    print(f"│{'💬 Available Commands':^{WIDTH}}│")
-    print(f"│{'':<{WIDTH}}│")
-
-    print(f"│  {'/help':<12} Show this help menu{'':<{WIDTH-35}}│")
-    print(f"│  {'/about':<12} About PocketAI{'':<{WIDTH-31}}│")
-    print(f"│  {'/config':<12} Display current configuration{'':<{WIDTH-44}}│")
-    print(f"│  {'/stats':<12} Show statistics settings{'':<{WIDTH-39}}│")
-    print(f"│  {'/stats on':<12} Enable response statistics{'':<{WIDTH-42}}│")
-    print(f"│  {'/stats off':<12} Disable response statistics{'':<{WIDTH-43}}│")
-    print(f"│  {'/version':<12} Show PocketAI version{'':<{WIDTH-38}}│")
-    print(f"│  {'/reset':<12} Reset conversation memory{'':<{WIDTH-40}}│")
-    print(f"│  {'/clear':<12} Clear the console screen{'':<{WIDTH-39}}│")
-    print(f"│  {'/bye':<12} Exit PocketAI{'':<{WIDTH-31}}│")
-
-    print(f"│{'':<{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'🚀 Happy Coding with PocketAI!':^{WIDTH}}│")
-    print("└" + "─" * WIDTH + "┘")
-    print()
-
-def show_config():
-    server = (
-        config["url"]
-        .replace("http://", "")
-        .replace("https://", "")
-        .replace("/api/chat", "")
-    )
-    WIDTH = 74
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'⚙️ PocketAI Config':^{WIDTH}} │")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'':<{WIDTH}}│")
-    print(f"│  {'🌐 Connected Server':<20}: {server:<46}   │")
-    print(f"│  {'🧠 Active Model':<20}: {config['model']:<46}   │")
-    print(f"│  {'📦 Version':<20}: v{config['version']:<45}   │")
-    print(f"│  {'🔒 Privacy':<20}: {'Local Only':<46}   │")
-    print(f"│{'':<{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'Configuration loaded successfully.':^{WIDTH}}│")
-    print("└" + "─" * WIDTH + "┘")
-    print()
-
-STATUS_MESSAGES = {
-    "thinking": [
-        "🧠 PocketAI is thinking...",
-        "💭 PocketAI is processing your request..."
-    ],
-    "searching": [
-        "🔍 PocketAI is searching for the best response...",
-        "📚 PocketAI is gathering information..."
-    ],
-    "writing": [
-        "✨ PocketAI is crafting a response...",
-        "📝 PocketAI is writing your answer..."
-    ]
-}
-def status():
-    category = random.choice(list(STATUS_MESSAGES.keys()))
-    return random.choice(STATUS_MESSAGES[category])
-
-def show_stats(stats):
-    WIDTH = 50
-
-    total_time = stats["total_duration"] / 1_000_000_000
-
-    eval_speed = (
-        stats["eval_count"] /
-        (stats["eval_duration"] / 1_000_000_000)
-        if stats["eval_duration"] else 0
-    )
-
-    prompt_speed = (
-        stats["prompt_eval_count"] /
-        (stats["prompt_eval_duration"] / 1_000_000_000)
-        if stats["prompt_eval_duration"] else 0
-    )
-
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'📊 Response Statistics':^{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│ ⏱ Total Time   : {total_time:>8.2f} s{'':<{WIDTH-29}}│")
-    print(f"│ ⚡ Eval Speed   : {eval_speed:>8.2f} tok/s{'':<{WIDTH-33}}│")
-    print(f"│ 📝 Prompt Speed : {prompt_speed:>8.2f} tok/s{'':<{WIDTH-35}}│")
-    print("└" + "─" * WIDTH + "┘")
-
-def show_stats_status():
-    WIDTH = 50
-
-    status = "🟢 ON" if stats_enabled else "🔴 OFF"
-
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'📊 Statistics':^{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│ {'Status':<12}: {status:<34}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│ {'/stats on':<12} Enable response statistics{'':<{WIDTH-39}}│")
-    print(f"│ {'/stats off':<12} Disable response statistics{'':<{WIDTH-40}}│")
-    print("└" + "─" * WIDTH + "┘")
-    print()
-
-def show_reset():
-    WIDTH = 50
-
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'🧹 Conversation Reset':^{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'Conversation history has been cleared.':^{WIDTH}}│")
-    print(f"│{'Start a fresh conversation!':^{WIDTH}}│")
-    print("└" + "─" * WIDTH + "┘")
-    print()
-
-def show_version():
-    WIDTH = 50
-
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'ℹ️ PocketAI Version':^{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│ {'Version':<12}: v{config['version']:<31}│")
-    print(f"│ {'Model':<12}: {config['model']:<32}│")
-    print(f"│ {'Mode':<12}: {'Local Only':<32}│")
-    print(f"│ {'Author':<12}: {'Somya Ranjan Pal':<32}│")
-    print("└" + "─" * WIDTH + "┘")
-    print()
-
-def show_about():
-    WIDTH = 74
-
-    print()
-    print("┌" + "─" * WIDTH + "┐")
-    print(f"│{'ℹ️ About PocketAI':^{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'':<{WIDTH}}│")
-    print(f"│{'PocketAI is a lightweight local AI assistant':^{WIDTH}}│")
-    print(f"│{'built on top of Ollama for fast offline chats.':^{WIDTH}}│")
-    print(f"│{'':<{WIDTH}}│")
-    print(f"│ {'Version':<12}: v{config['version']:<52}│")
-    print(f"│ {'Author':<12}: Somya Ranjan Pal{'':<45}│")
-    print(f"│ {'Backend':<12}: Ollama Chat API{'':<43}│")
-    print(f"│ {'Mode':<12}: Local Only{'':<48}│")
-    print(f"│{'':<{WIDTH}}│")
-    print("├" + "─" * WIDTH + "┤")
-    print(f"│{'Made with ❤️  and Python':^{WIDTH}}│")
-    print("└" + "─" * WIDTH + "┘")
-    print()
-
 stats_enabled = False
+
 def main():
     global stats_enabled
     
     clear_screen()
-    show_banner()
+    show_dashboard(stats_enabled)
     history = []
-    while True:
-        print()
-        prompt = input("You > ")
+    try:
+        while True:
+            print()
+            prompt = input("You > ")
 
-        if not prompt.strip():
-            continue
+            if not prompt.strip():
+                continue
 
-        if prompt.lower() == "/bye":
-            print("🤖 PocketAI > Goodbye! 👋")
-            break
+            if prompt.lower() == "/bye":
+                show_success("Goodbye! 👋")
+                break
 
-        if prompt.lower() == "/stats":
-            show_stats_status()
-            continue
+            if prompt.lower() == "/stats":
+                show_stats_status(stats_enabled)
+                continue
+            
+            if prompt.lower() == "/history":
+                files = list_chats()
+                show_history(files)
+                continue
+            
+            if prompt.lower().startswith("/delete "):
+                try:
+                    index = int(prompt.split()[1])
+                except:
+                    show_warning("Usage: /delete <number>")
+                    continue
+                chat = delete_chat(index)
+                if chat is None:
+                    show_warning("Chat not found.")
+                else:
+                    show_success(
+                        f"Deleted '{chat['title']}'"
+                    )
+                continue
+            
+            if prompt.lower().startswith("/rename "):
+                parts = prompt.split(maxsplit=2)
+                if len(parts) < 3:
+                    show_warning("Usage: /rename <number> <title>")
+                    continue
+                try:
+                    index = int(parts[1])
+                except ValueError:
+                    show_warning("Usage: /rename <number> <title>")
+                    continue
+
+                new_title = parts[2]
+                chat = rename_chat(index, new_title)
+                if chat is None:
+                    show_warning("Chat not found.")
+                else:
+                    show_success(
+                        f"Renamed to '{new_title}'"
+                    )
+                continue
                 
-        if prompt.lower() == "/help":
-            show_help()
-            continue
-        
-        if prompt.lower() == "/about":
-            show_about()
-            continue
-        
-        if prompt.lower() == "/reset":
-            history.clear()
-            show_reset()
-            continue
-        
-        if prompt.lower() == "/version":
-            show_version()
-            continue
+            if prompt.lower() == "/delete":
+                show_usage(
+                    "/delete",
+                    "/delete <number>",
+                    "/delete 1"
+                )
+                continue
+            
+            if prompt.lower() == "/load":
+                show_usage(
+                    "/load",
+                    "/load <number>",
+                    "/load 2"
+                )
+                continue
+            
+            if prompt.lower() == "/rename":
+                show_usage(
+                    "/rename",
+                    "/rename <number> <new title>",
+                    "/rename 1 Python Notes"
+                )
+                continue
+            
+            
+                
+            if prompt.lower().startswith("/load "):
+                try:
+                    index = int(prompt.split()[1])
+                except:
+                    show_warning("Usage: /load <number>")
+                    continue
+                
+                chat = load_chat(index)
+                if chat is None:
+                    show_warning("Chat not found.")
+                    continue
+                history = chat["messages"]
+                show_success(f"Loaded '{chat['title']}'")                   
+                continue
+                
+            if prompt.lower() == "/save":
 
-        if prompt.lower() == "/clear":
-            clear_screen()
-            show_banner()
-            continue
+                if not history:
+                    show_warning("Nothing to save yet.")
+                    continue
 
-        if prompt.lower() == "/stats on":
-            stats_enabled = True
-            show_stats_status()
-            continue
+                filename = save_chat(history)
+                show_success(
+                    f"Conversation saved.\n\n"
+                    f"📁 chats/\n"
+                    f"📄 {filename}"
+                )
+                continue
+            
+            if prompt.lower() == "/help":
+                show_help()
+                continue
+            
+            if prompt.lower() == "/about":
+                show_about()
+                continue
+            
+            if prompt.lower() == "/theme":
+                show_theme()
+                continue
+            
+            if prompt.lower().startswith("/theme "):
+                theme_name = prompt.split(maxsplit=1)[1].lower()
 
-        if prompt.lower() == "/stats off":
-            stats_enabled = False
-            show_stats_status()
-            continue
-        
-        if prompt.lower() == "/config":
-            show_config()
-            continue
-        history.append({
-            "role": "user",
-            "content": prompt
-        })
+                if set_theme(theme_name):
+                    show_success(
+                        f"Theme changed to {get_theme_icon()} {get_theme_name()}."
+                    )
+                else:
+                    show_warning(
+                        f"Unknown theme '{theme_name}'. Use /theme to see available themes."
+                    )
+
+                continue
+            
+            if prompt.lower() == "/reset":
+                history.clear()
+                show_reset()
+                continue
+            
+            if prompt.lower() == "/version":
+                show_version()
+                continue
+
+            if prompt.lower() == "/clear":
+                clear_screen()
+                show_dashboard(stats_enabled)
+                continue
+
+            if prompt.lower() == "/stats on":
+                stats_enabled = True
+                show_stats_status(stats_enabled)
+                continue
+
+            if prompt.lower() == "/stats off":
+                stats_enabled = False
+                show_stats_status(stats_enabled)
+                continue
+            
+            if prompt.lower() == "/config":
+                show_config(stats_enabled)
+                continue
+            history.append({
+                "role": "user",
+                "content": prompt
+            })
+            print()
+            print(status(), end="", flush=True)
+            
+            result = ask_ai(history)
+            if isinstance(result, str):
+                show_error(result)
+                continue
+            response = result["response"]
+            stats = result["stats"]
+            
+            print()
+            
+            history.append({
+                "role": "assistant",
+                "content": response
+            })
+            
+            if stats_enabled:
+                show_stats(stats)
+                
+    except KeyboardInterrupt:
         print()
-        print(status(), end="", flush=True)
-        
-        result = ask_ai(history)
-        if isinstance(result, str):
-            print(result)
-            continue
-        response = result["response"]
-        stats = result["stats"]
-        
-        print()
-        
-        history.append({
-            "role": "assistant",
-            "content": response
-        })
-        
-        if stats_enabled:
-            show_stats(stats)
+        show_success("Goodbye! 👋")
 
 if __name__ == "__main__":
     main()
