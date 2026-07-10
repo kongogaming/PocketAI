@@ -1,15 +1,23 @@
 <div align="center">
 
-# 📱 PocketAI
+# 🤖 PocketAI
 
-**A lightweight, private, and fast local AI assistant powered by Ollama.**
+### A lightweight, private, and beautiful local AI assistant powered by Ollama.
 
 [![Python](https://img.shields.io/badge/Python-3.13+-blue.svg?logo=python&logoColor=white)](#)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-v0.3.0-orange.svg)](#)
-[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/kongogaming/PocketAI.git)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-v0.4.0-orange.svg)](#)
+[![Ollama](https://img.shields.io/badge/Ollama-Compatible-black?logo=ollama)](#)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Android-blue)](#)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-PocketAI-black?logo=github)](https://github.com/kongogaming/PocketAI)
 
-**PocketAI** is a lightweight Python CLI that connects to a local Ollama server. Unlike cloud AI assistants, PocketAI keeps everything **private, offline, and 100% under your control.** *The best part? It's Hybrid.* Whether you want to run your AI model directly on your Windows PC or offload it to your Android phone via Termux, PocketAI connects seamlessly over your local network.
+**PocketAI** is an elegant terminal-based AI assistant that connects to your local **Ollama** server.
+
+Unlike cloud AI assistants, PocketAI keeps everything **offline**, **private**, and **under your control**. 
+
+Whether your AI model runs on your desktop computer or on your Android phone through Termux, PocketAI provides the exact same seamless experience over your local network.
+
+> ⚡ Fast • 🔒 Private • 🎨 Beautiful • 💻 Terminal First 
 
 </div>
 
@@ -17,19 +25,44 @@
 
 ## ✨ Features
 
-- 🤖 **Local AI Chat:** Converse with LLMs completely offline.
-- 🔄 **Hybrid Ecosystem:** Run models on your PC (Windows/Linux/Mac) OR your phone (Android/Termux).
-- ⚡ **Real-time Streaming:** Fast, typewriter-style responses.
-- 🧠 **Conversation Memory:** Maintains chat context naturally via the Ollama Chat API.
-- 📊 **Response Statistics:** Track prompt evaluation and token generation speeds.
-- 🎨 **Beautiful CLI:** A clean, minimal, and responsive terminal UI.
-- 🔒 **100% Private:** Your data never leaves your device or local network.
+- 🤖 **Local AI chat** powered by Ollama
+- ⚡ **Real-time streaming** responses
+- 🧠 **Conversation memory**
+- 💾 **Save** conversations
+- 📚 **Browse** chat history
+- 📂 **Load** previous chats
+- ✏️ **Rename** saved conversations
+- 🗑️ **Delete** conversations
+- 🎨 **Multiple beautiful themes**
+- 📊 **Built-in response statistics**
+- ⚙️ **Interactive configuration** panel
+- 📖 **Rich help menu**
+- 🔒 **100% Local & Private**
+- 📱 **Windows + Linux + Android Hybrid Support**
 
 ---
 
-## 📸 Media & Demos
+## 🌟 Why PocketAI?
 
-> **Note:** Screenshots and video demonstrations will be added after the **v1.0** release! Stay tuned. 🚀
+PocketAI was built for developers, students, Linux users, and AI enthusiasts who love working inside the terminal. Instead of providing another heavy browser interface, PocketAI focuses on simplicity.
+
+**Why choose PocketAI?**
+- 🚀 Starts instantly
+- 💻 Terminal-first workflow
+- 🪶 Lightweight architecture
+- 🔒 Completely offline
+- 🎨 Beautiful Rich-powered UI
+- 📂 Persistent conversation management
+- ⚡ Extremely fast
+- ❤️ Open Source
+
+If you spend most of your time in the terminal, PocketAI feels like a natural AI companion.
+
+---
+
+## 📸 Preview
+
+> 📸 Screenshots and demo videos will be added after the stable v1.0 release. Until then, development progress can be followed through the GitHub commits.
 
 ---
 
@@ -39,14 +72,18 @@
 PocketAI/
 │
 ├── pocketai/
-│   ├── ai.py
-│   ├── config.py
-│   └── main.py
+│   ├── ai.py          # Ollama communication via REST API
+│   ├── config.py      # Configuration loader & manager
+│   ├── storage.py     # Chat history & file management
+│   ├── theme.py       # Terminal theme engine
+│   ├── ui.py          # Rich terminal interface builder
+│   └── main.py        # Application entry point
 │
-├── config.json
+├── chats/             # Saved conversations directory
+├── config.json        # User configuration file
+├── requirements.txt   # Python dependencies
 ├── README.md
 ├── LICENSE
-├── requirements.txt
 └── .gitignore
 
 ```
@@ -55,24 +92,24 @@ PocketAI/
 
 ## ⚙️ Requirements
 
-### 💻 For PC Setup
+### 💻 Desktop
 
 * **Python 3.13+**
 * **Git**
-* **Requests Library** (`pip install -r requirements.txt`)
+* **Requests & Rich Libraries**
 * **Ollama** (Installed locally on your computer)
 
-### 📱 For Android Setup (Hybrid)
+### 📱 Android (Hybrid Mode)
 
 * **Android Device**
-* **Termux** (via F-Droid or GitHub)
-* **Ollama for Android** (via Termux)
+* **Termux** (via F-Droid or GitHub — *Do not use Google Play version*)
+* **Ollama for Android** (Running inside Termux)
 
 ---
 
-## 🚀 Installation & Setup
+## 🚀 Installation
 
-First, clone the repository and install the required Python dependencies on the machine where you will run the CLI:
+First, clone the repository and install the required Python dependencies on the machine where you will run the PocketAI interface:
 
 ```bash
 git clone [https://github.com/kongogaming/PocketAI.git](https://github.com/kongogaming/PocketAI.git)
@@ -83,27 +120,28 @@ pip install -r requirements.txt
 
 Next, choose **one of the two** methods below to host your AI model.
 
-### Method 1: Run Entirely on Windows / PC (Recommended)
+---
+
+## 💻 Method 1 — Run on Your Computer (Recommended)
 
 *Use this method if you want your PC's hardware to handle the AI processing.*
 
-1. **Install Ollama:** Download and install Ollama from [ollama.com/download](https://ollama.com/download).
-2. **Pull a Model:** Open your terminal and download a model (e.g., Qwen 2.5):
+1. **Install Ollama:** Download from [ollama.com/download](https://ollama.com/download).
+2. **Download a Model:**
 ```bash
 ollama pull qwen2.5:1.5b
 
 ```
 
 
-3. **Start the Server:** ```bash
+3. **Start Ollama:**
+```bash
 ollama serve
-```
-*(By default, Ollama connects to `http://localhost:11434`)*
 
 ```
 
 
-4. **Run PocketAI:** Open a new terminal in the PocketAI folder and run:
+4. **Run PocketAI:** Open a new terminal in the PocketAI folder and launch:
 ```bash
 python pocketai/main.py
 
@@ -111,11 +149,16 @@ python pocketai/main.py
 
 
 
-### Method 2: Run via Android / Termux (Hybrid Mode)
+---
 
-*Use this method if you want your phone to run the AI, and connect to it from your PC (or run it straight on the phone).*
+## 📱 Method 2 — Android Hybrid Mode (Termux)
 
-1. **Install Termux:** Download from [F-Droid](https://f-droid.org/) or [GitHub Releases](https://github.com/termux/termux-app/releases) (Do not use the Google Play Store version).
+*Use this method if you want your phone to run the AI, and connect to it from your PC over Wi-Fi.*
+
+1. **Install Termux:** Download the latest APK from [F-Droid (Recommended)](https://f-droid.org/en/packages/com.termux/) or the [Termux GitHub Releases](https://www.google.com/search?q=https://github.com/termux/termux-app/releases/latest).
+> ⚠️ **Important:** Do *not* download Termux from the Google Play Store, as that version is deprecated and broken.
+
+
 2. **Update Packages:**
 ```bash
 pkg update && pkg upgrade
@@ -123,16 +166,14 @@ pkg update && pkg upgrade
 ```
 
 
-3. **Install Ollama:** Follow the official Ollama Termux installation instructions.
-4. **Pull a Model:**
+3. **Install Ollama & Download a Model:** Follow standard Termux instructions for Ollama, then run:
 ```bash
 ollama pull gemma3:270m
 
 ```
 
 
-5. **Allow LAN Connections & Start Server:**
-This step exposes Ollama so your PC can connect to your phone over Wi-Fi.
+4. **Expose Ollama to your Local Network:**
 ```bash
 export OLLAMA_HOST=0.0.0.0:11434
 ollama serve
@@ -140,11 +181,11 @@ ollama serve
 ```
 
 
-> ⚠️ **Note:** Leave this Termux session running!
+> ⚠️ *Leave this Termux session running!*
 
 
-6. **Find your Phone's IP Address:** (e.g., `192.168.29.142`)
-7. **Update Configuration:** Open `config.json` in your PocketAI folder and update the URL:
+5. **Find your Phone's IP Address:** (e.g., `192.168.29.142`)
+6. **Update `config.json`:** On your PC, open the config file in the PocketAI folder and point it to your phone's IP:
 ```json
 {
     "url": "[http://192.168.29.142:11434/api/chat](http://192.168.29.142:11434/api/chat)",
@@ -154,7 +195,7 @@ ollama serve
 ```
 
 
-8. **Run PocketAI:** On your PC, launch the CLI:
+7. **Run PocketAI:** Launch the app on your PC:
 ```bash
 python pocketai/main.py
 
@@ -166,66 +207,120 @@ python pocketai/main.py
 
 ## 🎮 Commands
 
-Once you are in the PocketAI interface, you can use the following commands:
+PocketAI comes with a rich set of built-in commands to manage your experience directly from the chat prompt.
 
 | Command | Description |
 | --- | --- |
-| `/help` | Show available commands and help menu |
-| `/about` | View details about PocketAI |
-| `/config` | View your current configuration settings |
-| `/stats on` | Enable response statistics (speed, tokens) |
-| `/stats off` | Disable response statistics |
-| `/clear` | Clear the terminal screen |
-| `/reset` | Reset the conversation memory |
-| `/bye` | Exit the PocketAI CLI |
+| `/help` | Show the help menu |
+| `/about` | About PocketAI |
+| `/config` | View current configuration |
+| `/theme` | Browse available themes |
+| `/theme <name>` | Change the current theme |
+| `/save` | Save the current conversation |
+| `/history` | Browse saved conversations |
+| `/load <id>` | Load a saved conversation |
+| `/rename <id> <title>` | Rename a saved chat |
+| `/delete <id>` | Delete a saved chat |
+| `/stats` | View statistics status |
+| `/stats on` | Enable statistics |
+| `/stats off` | Disable statistics |
+| `/reset` | Clear current conversation memory |
+| `/clear` | Clear terminal screen |
+| `/version` | Display PocketAI version |
+| `/bye` | Exit PocketAI |
 
 ---
 
 ## 🧩 Supported Models
 
-PocketAI works with **any** Ollama-compatible model. Just ensure you update your `config.json` to match the model you pulled.
+PocketAI supports **every Ollama-compatible model**.
 
-**Popular Choices:**
+**Recommended Models:**
 
-* `qwen2.5:1.5b` ⭐ *(Great balance of speed and logic)*
-* `gemma3:270m` *(Ultra-lightweight, perfect for older phones)*
+* ⭐ `qwen2.5:1.5b`
+* `qwen2.5:3b`
+* `gemma3:270m`
+* `gemma3:1b`
 * `llama3.2`
 * `phi4-mini`
 * `deepseek-r1`
+* `mistral`
+* `tinyllama`
 
 ---
 
 ## 🗺️ Roadmap
 
-**✅ Completed**
+### ✅ v0.1
 
-* [x] Local AI Chat & Streaming responses
-* [x] Conversation memory via Chat API
-* [x] Configuration system (`config.json`)
-* [x] Response statistics & Help system
-* [x] Beautiful CLI interface
+* [x] Local AI Chat
+* [x] Streaming Responses
 
-**🚧 Coming Soon**
+### ✅ v0.2
 
-* [ ] Theme support
-* [ ] Chat history viewer & Save conversations
-* [ ] Export chats to file
-* [ ] Model switching directly in CLI
-* [ ] Plugin support
-* [ ] Voice interaction
+* [x] Configuration System
+* [x] Rich Terminal UI
+* [x] Statistics
+
+### ✅ v0.3
+
+* [x] Conversation Memory
+* [x] Better CLI Experience
+
+### ✅ v0.4
+
+* [x] Theme System
+* [x] Save & Load Conversations
+* [x] Chat History
+* [x] Rename & Delete Conversations
+* [x] Dashboard Improvements
+* [x] Better Help System
+* [x] Rich UI Polish
+
+### 🚀 Planned for v0.5
+
+* [ ] 🎤 Voice Input
+* [ ] 🔊 Text-to-Speech
+* [ ] 📤 Export Conversations
+* [ ] 🤖 Model Manager
+* [ ] ⚙️ Config Editor
+* [ ] 🔍 Search Chat History
+
+### 🌟 Future
+
+* [ ] RAG Support (Chat with documents)
+* [ ] Image Generation Support
+* [ ] Plugins System
+* [ ] Multi-model Conversations
+
+---
+
+## ❤️ Built With
+
+PocketAI is powered by amazing open-source projects. Huge thanks to their maintainers:
+
+* [Python](https://www.python.org/)
+* [Ollama](https://ollama.com/)
+* [Rich](https://github.com/Textualize/rich)
+* [Requests](https://requests.readthedocs.io/)
 
 ---
 
 ## 🤝 Contributing
 
-Contributions, ideas, and feature requests are always welcome!
-Feel free to fork the repository and submit a Pull Request.
+Contributions are always welcome! Feel free to:
+
+* Fork the repository
+* Improve the code
+* Suggest features
+* Report bugs
+* Open Pull Requests
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License**. See the `LICENSE` file for more details.
+Licensed under the **MIT License**. See the `LICENSE` file for details.
 
 ---
 
@@ -233,5 +328,11 @@ This project is licensed under the **MIT License**. See the `LICENSE` file for m
 
 **Somya Ranjan Pal**
 
-* GitHub: [@kongogaming](https://www.google.com/search?q=https://github.com/kongogaming)
-* Repository: [PocketAI](https://github.com/kongogaming/PocketAI.git)
+* **GitHub:** [@kongogaming](https://github.com/kongogaming)
+* **Repository:** [PocketAI](https://github.com/kongogaming/PocketAI)
+
+---
+
+### ⭐ If you like PocketAI, consider giving the repository a star!
+
+Made with ❤️ using Python, Rich, and Ollama.
