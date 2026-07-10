@@ -53,7 +53,10 @@ def ask_ai(history):
             "\n❌ Unable to connect to Ollama.\n\n"
             "Please check:\n"
             "• Ollama is running\n"
-            "• Your phone and PC are on the same Wi-Fi\n"
+            "• Please check:"
+            "• Ollama is running\n"
+            "• The server address is correct\n"
+            "• Ollama is accessiblei\n"
             "• The IP address in config.json is correct"
             )
     

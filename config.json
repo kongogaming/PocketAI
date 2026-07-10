@@ -1,5 +1,5 @@
 {
   "url": "http://localhost:11434/api/chat",
   "model": "qwen2.5:1.5b",
-  "version": "0.3.0"
+  "version": "0.4.0"
 }
