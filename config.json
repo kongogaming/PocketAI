@@ -1,5 +1,6 @@
 {
-  "url": "http://localhost:11434/api/chat",
-  "model": "qwen2.5:1.5b",
-  "version": "0.4.0"
+    "url": "http://192.168.29.142:11434/api/chat",
+    "model": "NitrAI/VibeThinker-3b:latest",
+    "theme": "nord",
+    "version": "0.5.0"
 }

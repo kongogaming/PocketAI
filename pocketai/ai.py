@@ -6,35 +6,39 @@ url = config["url"]
 model = config["model"]
 version = config["version"]
 
-def ask_ai(history):
+
+def ask_ai_stream(history):
     data = {
-        "model": model,
+        "model": config["model"],
         "messages": history,
-        "stream": True
+        "stream": True,
     }
 
     try:
-        response = requests.post(url, json=data, stream=True)
+        response = requests.post(url, json=data, stream=True, timeout=(10, 300))
+        response.encoding = "utf-8"
         response.raise_for_status()
+
         full_response = ""
-        first_chunk = True
+
         for line in response.iter_lines():
             if not line:
                 continue
-            
-            result= json.loads(line)
+
+            result = json.loads(line)
+
             chunk = result.get("message", {}).get("content", "")
-            
-            if first_chunk:
-                print("\r" + " " * 100, end="\r")
-                print("🤖 PocketAI >", end=" ", flush=True)
-                first_chunk = False
 
             if chunk:
-                print(chunk, end="", flush=True)
                 full_response += chunk
-            
-            if result["done"]:
+
+                yield {
+                    "done": False,
+                    "chunk": chunk,
+                }
+
+            if result.get("done", False):
+
                 stats = {
                     "total_duration": result.get("total_duration"),
                     "eval_count": result.get("eval_count"),
@@ -42,22 +46,25 @@ def ask_ai(history):
                     "prompt_eval_count": result.get("prompt_eval_count"),
                     "prompt_eval_duration": result.get("prompt_eval_duration"),
                 }
-                break
-        return{
-            "response": full_response,
-            "stats": stats
-        }
+
+                yield {
+                    "done": True,
+                    "response": full_response,
+                    "stats": stats,
+                }
+
+                return
 
     except Exception:
-        return (
-            "\n❌ Unable to connect to Ollama.\n\n"
-            "Please check:\n"
-            "• Ollama is running\n"
-            "• Please check:"
-            "• Ollama is running\n"
-            "• The server address is correct\n"
-            "• Ollama is accessiblei\n"
-            "• The IP address in config.json is correct"
-            )
-    
+        yield {
+            "done": True,
+            "error": (
+                "\n❌ Unable to connect to Ollama.\n\n"
+                "Please check:\n"
+                "• Ollama is running\n"
+                "• The server address is correct\n"
+                "• Ollama is accessible\n"
+                "• The IP address in config.json is correct"
+            ),
+        }
 

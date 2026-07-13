@@ -2,10 +2,12 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
+from rich.console import Group
 import random
 from config import config
 from theme import get_theme, get_theme_name, get_theme_icon, set_theme, list_themes, THEMES, ALIASES
 console = Console()
+
 TIPS = [
     "Use /help to view all commands.",
     "Use /theme to customize PocketAI.",
@@ -17,6 +19,16 @@ TIPS = [
     "Rename chats using /rename.",
     "Delete unwanted chats using /delete.",
     "Everything stays local with Ollama.",
+    "Export conversations using /export md.",
+    "Create text exports with /export txt.",
+    "Generate PDFs using /export pdf.",
+    "Search your current chat with /search.",
+    "Switch AI models anytime with /model.",
+    "Browse installed models using /models.",
+    "Check for new versions using /update.",
+    "Reset the conversation using /reset.",
+    "Clear the screen using /clear.",
+    "Themes are remembered after restart.",
 ]
 
 def get_server():
@@ -74,6 +86,17 @@ def show_help():
     add_section("💬 CONVERSATION")
     add_cmd("🧹", "/reset", "Clear conversation memory")
 
+    add_section("🔍 PRODUCTIVITY")
+    add_cmd("🔍", "/search <text>", "Search the current conversation")
+    add_cmd("📤", "/export md", "Export conversation as Markdown")
+    add_cmd("📄", "/export txt", "Export conversation as Text")
+    add_cmd("📕", "/export pdf", "Export conversation as PDF")
+    
+    add_section("🧠 MODELS")
+    add_cmd("📦", "/models", "List installed Ollama models")
+    add_cmd("🎯", "/model", "Show the current model")
+    add_cmd("🔄", "/model <name>", "Switch to another installed model")
+
     add_section("💾 STORAGE")
     add_cmd("💾", "/save", "Save current conversation")
     add_cmd("📚", "/history", "View saved conversations")
@@ -94,6 +117,7 @@ def show_help():
     add_cmd("🔧", "/config", "Display current configuration")
     add_cmd("🖥️", "/clear", "Clear the terminal")
     add_cmd("🚪", "/bye", "Exit PocketAI")
+    add_cmd("🔄", "/update", "Check for PocketAI updates")
 
     console.print(
         Panel(
@@ -405,15 +429,146 @@ def show_history(chats):
         "PocketAI Storage"
     )
 
-def show_usage(command, usage, example):
+def format_context(context):
+    if context == "-":
+        return "-"
+
+    try:
+        return f"{int(context) // 1024}K"
+    except:
+        return "-"
+
+def show_models(models):
+    theme = get_theme()
+
+    table = Table(show_header=True, header_style=f"bold {theme['primary']}")
+
+    table.add_column("#", style=theme["secondary"], width=4)
+    table.add_column("Model", style="bold")
+    table.add_column("Parameters")
+    table.add_column("Quant")
+    table.add_column("Context")
+    table.add_column("Status")
+    
+    for i, model in enumerate(models, start=1):
+
+        details = model.get("details", {})
+
+        current = "⭐ Active" if model["name"] == config["model"] else ""
+
+        table.add_row(
+            str(i),
+            model["name"],
+            details.get("parameter_size", "-"),
+            details.get("quantization_level", "-"),
+            format_context(details.get("context_length", "-")),
+            current,
+        )
+        
+    footer = Text(f"\n📦 Installed Models: {len(models)}",style="bold green")
+    content = Group(table, footer)
+    show_panel("📦 Installed Models", content)
+
+def show_current_model(model):
     table = create_info_table()
 
+    details = model.get("details", {})
+    capabilities = model.get("capabilities", [])
+
+    table.add_row("🧠 Active Model", model["name"])
+    table.add_row("📦 Parameters", details.get("parameter_size", "-"))
+    table.add_row("⚡ Quant", details.get("quantization_level", "-"))
+    table.add_row("📏 Context", format_context(details.get("context_length", "-")))
+    table.add_row("🧬 Family", details.get("family", "-"))
+    table.add_row("📄 Format", details.get("format", "-"))
+    table.add_row(
+        "🛠 Tools",
+        "✅" if "tools" in capabilities else "❌",
+    )
+    table.add_row(
+        "🧠 Thinking",
+        "✅" if "thinking" in capabilities else "❌",
+    )
+
+    footer = Text(
+        "\n💡 Tip: Use /models to browse installed models.",
+        style="dim",
+    )
+
+    content = Group(table, footer)
+
+    show_panel("🧠 Active Model", content)
+
+def show_usage(command, usages, example):
+    table = create_info_table()
+
+    if isinstance(usages, list):
+        usages = "\n".join(usages)
+
     table.add_row("⚠️ Command", command)
-    table.add_row("📖 Usage", usage)
+    table.add_row("📖 Usage", usages)
     table.add_row("💡 Example", example)
 
     show_panel(
         "Command Usage",
         table,
         "PocketAI Help"
+    )
+
+def show_search_results(results, query):
+    table = create_info_table()
+
+    if not results:
+
+        table.add_row("🔍 Result", "No matches found.")
+        table.add_row("🔎 Query", query)
+        table.add_row("💡 Tip", "Try another keyword.")
+
+    else:
+
+        table.add_row("🔍 Matches", str(len(results)))
+
+        for result in results:
+
+            icon = "👤" if result["role"] == "User" else "🤖"
+
+            preview = result["content"]
+
+            if len(preview) > 120:
+                preview = preview[:117] + "..."
+
+            text = Text(preview)
+
+            start = preview.lower().find(query.lower())
+
+            if start != -1:
+                end = start + len(query)
+                text.stylize("bold yellow", start, end)
+
+            table.add_row(
+                f"{icon} {result['role']} #{result['number']}",
+                text,
+            )
+
+    show_panel(
+        "Search Results",
+        table,
+        "PocketAI Search",
+    )
+
+def show_update(current, latest, available):
+    table = create_info_table()
+
+    table.add_row("📦 Current Version", current)
+    table.add_row("🌐 Latest Version", latest)
+
+    if available:
+        table.add_row("🚀 Status", "Update Available")
+    else:
+        table.add_row("✅ Status", "You're using the latest version.")
+
+    show_panel(
+        "Update Check",
+        table,
+        "PocketAI Updater"
     )
