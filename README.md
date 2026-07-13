@@ -6,11 +6,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13+-blue.svg?logo=python&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-<<<<<<< HEAD
-[![Version](https://img.shields.io/badge/Version-v0.4.0-orange.svg)](#)
-=======
 [![Version](https://img.shields.io/badge/Version-v0.5.1-orange.svg)](#)
->>>>>>> b4c3bf1 (Update README)
 [![Ollama](https://img.shields.io/badge/Ollama-Compatible-black?logo=ollama)](#)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Android-blue)](#)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-PocketAI-black?logo=github)](https://github.com/kongogaming/PocketAI)
@@ -33,18 +29,6 @@ Whether your AI model runs on your desktop computer or on your Android phone thr
 - ⚡ **Real-time streaming** responses
 - 🧠 **Conversation memory**
 - 💾 **Save** conversations
-<<<<<<< HEAD
-- 📚 **Browse** chat history
-- 📂 **Load** previous chats
-- ✏️ **Rename** saved conversations
-- 🗑️ **Delete** conversations
-- 🎨 **Multiple beautiful themes**
-- 📊 **Built-in response statistics**
-- ⚙️ **Interactive configuration** panel
-- 📖 **Rich help menu**
-- 🔒 **100% Local & Private**
-- 📱 **Windows + Linux + Android Hybrid Support**
-=======
 - 📚 **Browse** saved chat history
 - 📂 **Load** previous conversations
 - ✏️ **Rename** saved conversations
@@ -61,7 +45,6 @@ Whether your AI model runs on your desktop computer or on your Android phone thr
 - 📖 **Rich help menu**
 - 🔒 **100% Local & Private**
 - 📱 **Windows • Linux • Android Hybrid Support**
->>>>>>> b4c3bf1 (Update README)
 
 ---
 
@@ -85,9 +68,6 @@ If you spend most of your time in the terminal, PocketAI feels like a natural AI
 
 ## 📸 Preview
 
-<<<<<<< HEAD
-> 📸 Screenshots and demo videos will be added after the stable v1.0 release. Until then, development progress can be followed through the GitHub commits.
-=======
 > 📸 Screenshots and demo GIFs will be added after the v0.5.2 release.
 
 **Current UI includes:**
@@ -99,7 +79,6 @@ If you spend most of your time in the terminal, PocketAI feels like a natural AI
 - Search panel
 - Export manager
 - Conversation history
->>>>>>> b4c3bf1 (Update README)
 
 ---
 
@@ -109,18 +88,6 @@ If you spend most of your time in the terminal, PocketAI feels like a natural AI
 PocketAI/
 │
 ├── pocketai/
-<<<<<<< HEAD
-│   ├── ai.py          # Ollama communication via REST API
-│   ├── config.py      # Configuration loader & manager
-│   ├── storage.py     # Chat history & file management
-│   ├── theme.py       # Terminal theme engine
-│   ├── ui.py          # Rich terminal interface builder
-│   └── main.py        # Application entry point
-│
-├── chats/             # Saved conversations directory
-├── config.json        # User configuration file
-├── requirements.txt   # Python dependencies
-=======
 │   ├── ai.py
 │   ├── config.py
 │   ├── exporter.py
@@ -137,7 +104,6 @@ PocketAI/
 ├── exports/
 ├── config.json
 ├── requirements.txt
->>>>>>> b4c3bf1 (Update README)
 ├── README.md
 ├── LICENSE
 └── .gitignore
@@ -267,24 +233,6 @@ PocketAI comes with a rich set of built-in commands to manage your experience di
 
 | Command | Description |
 | --- | --- |
-<<<<<<< HEAD
-| `/help` | Show the help menu |
-| `/about` | About PocketAI |
-| `/config` | View current configuration |
-| `/theme` | Browse available themes |
-| `/theme <name>` | Change the current theme |
-| `/save` | Save the current conversation |
-| `/history` | Browse saved conversations |
-| `/load <id>` | Load a saved conversation |
-| `/rename <id> <title>` | Rename a saved chat |
-| `/delete <id>` | Delete a saved chat |
-| `/stats` | View statistics status |
-| `/stats on` | Enable statistics |
-| `/stats off` | Disable statistics |
-| `/reset` | Clear current conversation memory |
-| `/clear` | Clear terminal screen |
-| `/version` | Display PocketAI version |
-=======
 | `/help` | Show help menu |
 | `/about` | About PocketAI |
 | `/config` | View current configuration |
@@ -309,23 +257,12 @@ PocketAI comes with a rich set of built-in commands to manage your experience di
 | `/reset` | Clear conversation |
 | `/clear` | Clear terminal |
 | `/version` | Show PocketAI version |
->>>>>>> b4c3bf1 (Update README)
 | `/bye` | Exit PocketAI |
 
 ---
 
 ## 🧩 Supported Models
 
-<<<<<<< HEAD
-PocketAI supports **every Ollama-compatible model**.
-
-**Recommended Models:**
-
-* ⭐ `qwen2.5:1.5b`
-* `qwen2.5:3b`
-* `gemma3:270m`
-* `gemma3:1b`
-=======
 PocketAI works with any Ollama-compatible model.
 
 **Recommended:**
@@ -335,7 +272,6 @@ PocketAI works with any Ollama-compatible model.
 * ⭐ `qwen3:4b`
 * ⭐ `gemma3:1b`
 * `gemma3:270m`
->>>>>>> b4c3bf1 (Update README)
 * `llama3.2`
 * `phi4-mini`
 * `deepseek-r1`
@@ -366,29 +302,6 @@ PocketAI works with any Ollama-compatible model.
 
 * [x] Theme System
 * [x] Save & Load Conversations
-<<<<<<< HEAD
-* [x] Chat History
-* [x] Rename & Delete Conversations
-* [x] Dashboard Improvements
-* [x] Better Help System
-* [x] Rich UI Polish
-
-### 🚀 Planned for v0.5
-
-* [ ] 🎤 Voice Input
-* [ ] 🔊 Text-to-Speech
-* [ ] 📤 Export Conversations
-* [ ] 🤖 Model Manager
-* [ ] ⚙️ Config Editor
-* [ ] 🔍 Search Chat History
-
-### 🌟 Future
-
-* [ ] RAG Support (Chat with documents)
-* [ ] Image Generation Support
-* [ ] Plugins System
-* [ ] Multi-model Conversations
-=======
 * [x] History Management
 * [x] Dashboard Improvements
 
@@ -422,7 +335,6 @@ PocketAI works with any Ollama-compatible model.
 * [ ] Plugin System
 * [ ] Image Generation Support
 * [ ] Better Markdown Renderer
->>>>>>> b4c3bf1 (Update README)
 
 ---
 
@@ -466,8 +378,4 @@ Licensed under the **MIT License**. See the `LICENSE` file for details.
 
 ### ⭐ If you like PocketAI, consider giving the repository a star!
 
-<<<<<<< HEAD
 Made with ❤️ using Python, Rich, and Ollama.
-=======
-Made with ❤️ using Python, Rich, and Ollama.
->>>>>>> b4c3bf1 (Update README)
