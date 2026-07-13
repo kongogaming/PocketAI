@@ -6,7 +6,11 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13+-blue.svg?logo=python&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+<<<<<<< HEAD
 [![Version](https://img.shields.io/badge/Version-v0.4.0-orange.svg)](#)
+=======
+[![Version](https://img.shields.io/badge/Version-v0.5.1-orange.svg)](#)
+>>>>>>> b4c3bf1 (Update README)
 [![Ollama](https://img.shields.io/badge/Ollama-Compatible-black?logo=ollama)](#)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Android-blue)](#)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-PocketAI-black?logo=github)](https://github.com/kongogaming/PocketAI)
@@ -29,6 +33,7 @@ Whether your AI model runs on your desktop computer or on your Android phone thr
 - ⚡ **Real-time streaming** responses
 - 🧠 **Conversation memory**
 - 💾 **Save** conversations
+<<<<<<< HEAD
 - 📚 **Browse** chat history
 - 📂 **Load** previous chats
 - ✏️ **Rename** saved conversations
@@ -39,6 +44,24 @@ Whether your AI model runs on your desktop computer or on your Android phone thr
 - 📖 **Rich help menu**
 - 🔒 **100% Local & Private**
 - 📱 **Windows + Linux + Android Hybrid Support**
+=======
+- 📚 **Browse** saved chat history
+- 📂 **Load** previous conversations
+- ✏️ **Rename** saved conversations
+- 🗑️ **Delete** saved conversations
+- 🎨 **Multiple beautiful themes**
+- 📊 **Built-in response statistics**
+- 🔍 **Search** within the current conversation
+- 📤 **Export** conversations to Markdown
+- 📄 **Export** conversations to Plain Text
+- 📕 **Export** conversations to PDF
+- 🔄 **Built-in update checker**
+- 📦 **Model browser** & quick model switching
+- ⚙️ **Interactive configuration** panel
+- 📖 **Rich help menu**
+- 🔒 **100% Local & Private**
+- 📱 **Windows • Linux • Android Hybrid Support**
+>>>>>>> b4c3bf1 (Update README)
 
 ---
 
@@ -62,7 +85,21 @@ If you spend most of your time in the terminal, PocketAI feels like a natural AI
 
 ## 📸 Preview
 
+<<<<<<< HEAD
 > 📸 Screenshots and demo videos will be added after the stable v1.0 release. Until then, development progress can be followed through the GitHub commits.
+=======
+> 📸 Screenshots and demo GIFs will be added after the v0.5.2 release.
+
+**Current UI includes:**
+- Beautiful Rich dashboard
+- Live streaming responses
+- Theme system
+- Model manager
+- Statistics panel
+- Search panel
+- Export manager
+- Conversation history
+>>>>>>> b4c3bf1 (Update README)
 
 ---
 
@@ -72,6 +109,7 @@ If you spend most of your time in the terminal, PocketAI feels like a natural AI
 PocketAI/
 │
 ├── pocketai/
+<<<<<<< HEAD
 │   ├── ai.py          # Ollama communication via REST API
 │   ├── config.py      # Configuration loader & manager
 │   ├── storage.py     # Chat history & file management
@@ -82,6 +120,24 @@ PocketAI/
 ├── chats/             # Saved conversations directory
 ├── config.json        # User configuration file
 ├── requirements.txt   # Python dependencies
+=======
+│   ├── ai.py
+│   ├── config.py
+│   ├── exporter.py
+│   ├── markdown.py
+│   ├── models.py
+│   ├── search.py
+│   ├── storage.py
+│   ├── theme.py
+│   ├── ui.py
+│   ├── updater.py
+│   └── main.py
+│
+├── chats/
+├── exports/
+├── config.json
+├── requirements.txt
+>>>>>>> b4c3bf1 (Update README)
 ├── README.md
 ├── LICENSE
 └── .gitignore
@@ -211,6 +267,7 @@ PocketAI comes with a rich set of built-in commands to manage your experience di
 
 | Command | Description |
 | --- | --- |
+<<<<<<< HEAD
 | `/help` | Show the help menu |
 | `/about` | About PocketAI |
 | `/config` | View current configuration |
@@ -227,12 +284,39 @@ PocketAI comes with a rich set of built-in commands to manage your experience di
 | `/reset` | Clear current conversation memory |
 | `/clear` | Clear terminal screen |
 | `/version` | Display PocketAI version |
+=======
+| `/help` | Show help menu |
+| `/about` | About PocketAI |
+| `/config` | View current configuration |
+| `/theme` | Browse available themes |
+| `/theme <name>` | Change theme |
+| `/models` | List installed Ollama models |
+| `/model` | Show current model |
+| `/model <name>` | Switch model |
+| `/save` | Save conversation |
+| `/history` | Browse saved chats |
+| `/load <id>` | Load conversation |
+| `/rename <id> <title>` | Rename conversation |
+| `/delete <id>` | Delete conversation |
+| `/search <text>` | Search current conversation |
+| `/export md` | Export as Markdown |
+| `/export txt` | Export as Text |
+| `/export pdf` | Export as PDF |
+| `/update` | Check for updates |
+| `/stats` | Show statistics status |
+| `/stats on` | Enable statistics |
+| `/stats off` | Disable statistics |
+| `/reset` | Clear conversation |
+| `/clear` | Clear terminal |
+| `/version` | Show PocketAI version |
+>>>>>>> b4c3bf1 (Update README)
 | `/bye` | Exit PocketAI |
 
 ---
 
 ## 🧩 Supported Models
 
+<<<<<<< HEAD
 PocketAI supports **every Ollama-compatible model**.
 
 **Recommended Models:**
@@ -241,6 +325,17 @@ PocketAI supports **every Ollama-compatible model**.
 * `qwen2.5:3b`
 * `gemma3:270m`
 * `gemma3:1b`
+=======
+PocketAI works with any Ollama-compatible model.
+
+**Recommended:**
+
+* ⭐ `qwen2.5:1.5b`
+* ⭐ `qwen2.5:3b`
+* ⭐ `qwen3:4b`
+* ⭐ `gemma3:1b`
+* `gemma3:270m`
+>>>>>>> b4c3bf1 (Update README)
 * `llama3.2`
 * `phi4-mini`
 * `deepseek-r1`
@@ -271,6 +366,7 @@ PocketAI supports **every Ollama-compatible model**.
 
 * [x] Theme System
 * [x] Save & Load Conversations
+<<<<<<< HEAD
 * [x] Chat History
 * [x] Rename & Delete Conversations
 * [x] Dashboard Improvements
@@ -292,6 +388,41 @@ PocketAI supports **every Ollama-compatible model**.
 * [ ] Image Generation Support
 * [ ] Plugins System
 * [ ] Multi-model Conversations
+=======
+* [x] History Management
+* [x] Dashboard Improvements
+
+### ✅ v0.5.1
+
+* [x] Search Conversations
+* [x] Markdown Export
+* [x] TXT Export
+* [x] PDF Export
+* [x] Update Checker
+* [x] Model Manager Improvements
+* [x] UI Polish
+* [x] Better Help System
+* [x] Better Search UI
+
+### 🚀 Planned for v0.5.2
+
+* [ ] First Launch Setup Wizard
+* [ ] Automatic Configuration Creation
+* [ ] Automatic Ollama Detection
+* [ ] Automatic Model Detection
+* [ ] Better EXE Distribution
+
+### 🌟 Planned for v0.6
+
+* [ ] GitHub Release Checker
+* [ ] Automatic Updater
+* [ ] Voice Input
+* [ ] Text-to-Speech
+* [ ] Chat With Documents (RAG)
+* [ ] Plugin System
+* [ ] Image Generation Support
+* [ ] Better Markdown Renderer
+>>>>>>> b4c3bf1 (Update README)
 
 ---
 
@@ -335,4 +466,8 @@ Licensed under the **MIT License**. See the `LICENSE` file for details.
 
 ### ⭐ If you like PocketAI, consider giving the repository a star!
 
+<<<<<<< HEAD
 Made with ❤️ using Python, Rich, and Ollama.
+=======
+Made with ❤️ using Python, Rich, and Ollama.
+>>>>>>> b4c3bf1 (Update README)
