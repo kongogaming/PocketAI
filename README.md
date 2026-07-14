@@ -1,4 +1,3 @@
-
 <div align="center">
 
 # 🤖 PocketAI
@@ -133,9 +132,33 @@ PocketAI/
 
 ---
 
-## 🚀 Installation
+## 📥 Download
 
-First, clone the repository and install the required Python dependencies on the machine where you will run the PocketAI interface:
+The easiest way to get started with PocketAI is by downloading the latest release from the GitHub Releases page.
+
+### 🪟 Windows
+
+#### Option 1 — Standalone EXE (Recommended)
+
+1. Download `PocketAI.exe` from the latest release.
+2. Double-click `PocketAI.exe`.
+3. Complete the first-run setup wizard.
+4. Start chatting with your local AI.
+
+#### Option 2 — ZIP Package
+
+1. Download the Windows ZIP package.
+2. Extract it to any folder.
+3. Run `PocketAI.exe`.
+4. Complete the first-run setup wizard.
+
+> **Note:** Ollama must already be installed and running with at least one model.
+
+---
+
+## 🛠️ Build from Source
+
+Developers who want to build PocketAI from source can clone the repository and install the required dependencies:
 
 ```bash
 git clone [https://github.com/kongogaming/PocketAI.git](https://github.com/kongogaming/PocketAI.git)
@@ -209,7 +232,7 @@ ollama serve
 
 ## 🏁 Run PocketAI
 
-Launch the app on your PC from the PocketAI folder:
+If you built from source, launch the app on your PC from the PocketAI folder:
 
 ```bash
 python pocketai/main.py
