@@ -1,3 +1,4 @@
+
 <div align="center">
 
 # 🤖 PocketAI
@@ -6,7 +7,7 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13+-blue.svg?logo=python&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-v0.5.1-orange.svg)](#)
+[![Version](https://img.shields.io/badge/Version-v0.5.2-orange.svg)](#)
 [![Ollama](https://img.shields.io/badge/Ollama-Compatible-black?logo=ollama)](#)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Android-blue)](#)
 [![GitHub Repo](https://img.shields.io/badge/GitHub-PocketAI-black?logo=github)](https://github.com/kongogaming/PocketAI)
@@ -26,6 +27,12 @@ Whether your AI model runs on your desktop computer or on your Android phone thr
 ## ✨ Features
 
 - 🤖 **Local AI chat** powered by Ollama
+- 🚀 **First-Run Setup Wizard**
+- 🤖 **Automatic Ollama Detection**
+- 📦 **Automatic Model Detection**
+- ⚙️ **Automatic Configuration Creation**
+- 🖥️ **EXE Ready** (No manual config required)
+- 🛡️ **Graceful Ctrl+C Exit Confirmation**
 - ⚡ **Real-time streaming** responses
 - 🧠 **Conversation memory**
 - 💾 **Save** conversations
@@ -36,12 +43,9 @@ Whether your AI model runs on your desktop computer or on your Android phone thr
 - 🎨 **Multiple beautiful themes**
 - 📊 **Built-in response statistics**
 - 🔍 **Search** within the current conversation
-- 📤 **Export** conversations to Markdown
-- 📄 **Export** conversations to Plain Text
-- 📕 **Export** conversations to PDF
+- 📤 **Export** conversations to Markdown, Plain Text, or PDF
 - 🔄 **Built-in update checker**
 - 📦 **Model browser** & quick model switching
-- ⚙️ **Interactive configuration** panel
 - 📖 **Rich help menu**
 - 🔒 **100% Local & Private**
 - 📱 **Windows • Linux • Android Hybrid Support**
@@ -68,17 +72,16 @@ If you spend most of your time in the terminal, PocketAI feels like a natural AI
 
 ## 📸 Preview
 
-> 📸 Screenshots and demo GIFs will be added after the v0.5.2 release.
+> 📸 Screenshots and demo GIFs will be added soon.
 
 **Current UI includes:**
-- Beautiful Rich dashboard
-- Live streaming responses
-- Theme system
-- Model manager
-- Statistics panel
-- Search panel
-- Export manager
-- Conversation history
+- 🚀 First-Run Setup Wizard
+- 🎨 Rich Dashboard
+- 📦 Model Manager
+- 🔍 Conversation Search
+- 📤 Export Manager
+- 📚 Conversation History
+- ⚙️ Theme System
 
 ---
 
@@ -94,6 +97,8 @@ PocketAI/
 │   ├── markdown.py
 │   ├── models.py
 │   ├── search.py
+│   ├── setup.py
+│   ├── setup_ui.py
 │   ├── storage.py
 │   ├── theme.py
 │   ├── ui.py
@@ -102,11 +107,10 @@ PocketAI/
 │
 ├── chats/
 ├── exports/
-├── config.json
+├── PocketAI.spec
 ├── requirements.txt
 ├── README.md
-├── LICENSE
-└── .gitignore
+└── LICENSE
 
 ```
 
@@ -144,7 +148,7 @@ Next, choose **one of the two** methods below to host your AI model.
 
 ---
 
-## 💻 Method 1 — Run on Your Computer (Recommended)
+### 💻 Method 1 — Run on Your Computer (Recommended)
 
 *Use this method if you want your PC's hardware to handle the AI processing.*
 
@@ -163,17 +167,10 @@ ollama serve
 ```
 
 
-4. **Run PocketAI:** Open a new terminal in the PocketAI folder and launch:
-```bash
-python pocketai/main.py
-
-```
-
-
 
 ---
 
-## 📱 Method 2 — Android Hybrid Mode (Termux)
+### 📱 Method 2 — Android Hybrid Mode (Termux)
 
 *Use this method if you want your phone to run the AI, and connect to it from your PC over Wi-Fi.*
 
@@ -206,24 +203,30 @@ ollama serve
 > ⚠️ *Leave this Termux session running!*
 
 
-5. **Find your Phone's IP Address:** (e.g., `192.168.29.142`)
-6. **Update `config.json`:** On your PC, open the config file in the PocketAI folder and point it to your phone's IP:
-```json
-{
-    "url": "[http://192.168.29.142:11434/api/chat](http://192.168.29.142:11434/api/chat)",
-    "model": "gemma3:270m"
-}
+5. **Find your Phone's IP Address:** Take note of your phone's local IP (e.g., `192.168.29.142`).
 
-```
+---
 
+## 🏁 Run PocketAI
 
-7. **Run PocketAI:** Launch the app on your PC:
+Launch the app on your PC from the PocketAI folder:
+
 ```bash
 python pocketai/main.py
 
 ```
 
+### 🚀 First Launch
 
+PocketAI automatically detects whether a configuration exists. **No manual config editing is required.**
+
+On first launch, the interactive setup wizard will:
+
+1. Connect to your Ollama server (or prompt for your phone's IP if using Hybrid Mode)
+2. Detect installed models
+3. Recommend the best model
+4. Generate your configuration file automatically
+5. Launch the PocketAI dashboard
 
 ---
 
@@ -282,59 +285,42 @@ PocketAI works with any Ollama-compatible model.
 
 ## 🗺️ Roadmap
 
-### ✅ v0.1
+### ✅ v0.1 - v0.4
 
-* [x] Local AI Chat
-* [x] Streaming Responses
-
-### ✅ v0.2
-
-* [x] Configuration System
-* [x] Rich Terminal UI
-* [x] Statistics
-
-### ✅ v0.3
-
-* [x] Conversation Memory
-* [x] Better CLI Experience
-
-### ✅ v0.4
-
-* [x] Theme System
-* [x] Save & Load Conversations
-* [x] History Management
-* [x] Dashboard Improvements
+* Local AI Chat & Streaming Responses
+* Configuration & Theme Systems
+* Rich Terminal UI & Statistics
+* Conversation Memory, Save & Load
+* History Management & Dashboard Improvements
 
 ### ✅ v0.5.1
 
-* [x] Search Conversations
-* [x] Markdown Export
-* [x] TXT Export
-* [x] PDF Export
-* [x] Update Checker
-* [x] Model Manager Improvements
-* [x] UI Polish
-* [x] Better Help System
-* [x] Better Search UI
+* Search Conversations
+* Markdown, TXT, and PDF Export
+* Update Checker
+* Model Manager Improvements
+* UI Polish & Better Help System
 
-### 🚀 Planned for v0.5.2
+### ✅ v0.5.2
 
-* [ ] First Launch Setup Wizard
-* [ ] Automatic Configuration Creation
-* [ ] Automatic Ollama Detection
-* [ ] Automatic Model Detection
-* [ ] Better EXE Distribution
+* [x] First-Run Setup Wizard
+* [x] Automatic Ollama Detection
+* [x] Automatic Model Detection
+* [x] Automatic Configuration Creation
+* [x] Better EXE Distribution
+* [x] Graceful Ctrl+C Exit Confirmation
+* [x] Setup Wizard UI Polish
 
-### 🌟 Planned for v0.6
+### 🚀 Planned for v0.6
 
-* [ ] GitHub Release Checker
-* [ ] Automatic Updater
+* [ ] Automatic Self-Updater
+* [ ] GitHub Release Installer
 * [ ] Voice Input
 * [ ] Text-to-Speech
 * [ ] Chat With Documents (RAG)
+* [ ] Image Understanding
 * [ ] Plugin System
-* [ ] Image Generation Support
-* [ ] Better Markdown Renderer
+* [ ] Performance Improvements
 
 ---
 
