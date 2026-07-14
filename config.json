@@ -1,6 +1,0 @@
-{
-    "url": "http://192.168.29.142:11434/api/chat",
-    "model": "NitrAI/VibeThinker-3b:latest",
-    "theme": "nord",
-    "version": "0.5.0"
-}

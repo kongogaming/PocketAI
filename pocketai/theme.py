@@ -1,5 +1,3 @@
-# theme.py
-
 THEMES = {
     "default": {
         "icon": "🎨",
@@ -69,8 +67,6 @@ THEMES = {
         "dim": "dim",
     },
     }
-
-    
 
 ALIASES = {
    

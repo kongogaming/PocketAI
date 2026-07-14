@@ -2,14 +2,16 @@ import json
 from config import config
 import requests 
 
-url = config["url"]
-model = config["model"]
-version = config["version"]
+
+
 
 
 def ask_ai_stream(history):
+    url = config["url"]
+    model = config["model"]
+    version = config["version"]
     data = {
-        "model": config["model"],
+        "model": model,
         "messages": history,
         "stream": True,
     }

@@ -9,8 +9,17 @@ else:
 
 CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 
-with open(CONFIG_PATH, encoding="utf-8") as file:
-    config = json.load(file)
+config = {}
+
+
+def load_config():
+    with open(CONFIG_PATH, encoding="utf-8") as file:
+        data = json.load(file)
+
+    config.clear()
+    config.update(data)
+
+    return config
 
 
 def save_config():

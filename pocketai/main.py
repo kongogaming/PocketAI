@@ -1,5 +1,5 @@
 
-from config import config,save_config
+from config import save_config,load_config
 from ai import ask_ai_stream
 import os
 import random
@@ -23,8 +23,11 @@ from ui import (
     show_models,
     show_current_model,
     show_search_results,
-    show_update
+    show_update,
+    confirm_exit,
+    goodbye,
 )
+from setup import is_first_run, run_setup
 from theme import get_theme, get_theme_icon, get_theme_name, set_theme, list_themes
 from storage import save_chat
 from storage import list_chats, load_chat, list_chats, delete_chat, rename_chat
@@ -40,19 +43,27 @@ stats_enabled = False
 
 def main():
     global stats_enabled
-    
+
+    if is_first_run():
+        config = run_setup()
+
+        if config is None:
+            return
+
+    config = load_config()
+
     clear_screen()
     set_theme(config.get("theme", "default"))
     show_dashboard(stats_enabled)
+
     history = []
-    try:
-        while True:
+    while True:
             print()
             prompt = input("You > ")
 
             if not prompt.strip():
                 continue
-
+            
             if prompt.lower() == "/bye":
                 show_success("Goodbye! 👋")
                 break
@@ -382,9 +393,16 @@ def main():
             if stats_enabled and stats:
                 show_stats(stats)
 
-    except KeyboardInterrupt:
-        print()
-        show_success("Goodbye! 👋")
-
 if __name__ == "__main__":
-    main()
+    while True:
+        try:
+            main()
+            break
+
+        except KeyboardInterrupt:
+            clear_screen()
+            if confirm_exit():
+                clear_screen()
+                goodbye()
+                break
+            clear_screen()

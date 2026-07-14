@@ -3,6 +3,8 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
 from rich.console import Group
+from rich.prompt import Confirm
+
 import random
 from config import config
 from theme import get_theme, get_theme_name, get_theme_icon, set_theme, list_themes, THEMES, ALIASES
@@ -571,4 +573,37 @@ def show_update(current, latest, available):
         "Update Check",
         table,
         "PocketAI Updater"
+    )
+
+def confirm_exit():
+    theme = get_theme()
+
+    console.print()
+
+    console.print(
+        Panel(
+            "Are you sure you want to quit PocketAI?",
+            title="🚪 Exit PocketAI",
+            border_style=theme["border"],
+            padding=(1, 2),
+        )
+    )
+
+    return Confirm.ask(
+        "Exit PocketAI?",
+        default=False,
+    )
+
+def goodbye():
+    theme = get_theme()
+
+    console.print()
+
+    console.print(
+        Panel(
+            "Thanks for using PocketAI 👋\n\nSee you next time!",
+            title="Goodbye",
+            border_style=theme["border"],
+            padding=(1, 2),
+        )
     )
