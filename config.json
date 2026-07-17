@@ -1,0 +1,9 @@
+{
+    "url": "http://192.168.29.142:11434/api/chat",
+    "model": "qwen2.5:1.5b",
+    "theme": "nord",
+    "stats": false,
+    "version": "0.6.0",
+    "embedding_model": "nomic-embed-text",
+    "active_documents": null
+}

@@ -2,10 +2,6 @@ import json
 from config import config
 import requests 
 
-
-
-
-
 def ask_ai_stream(history):
     url = config["url"]
     model = config["model"]
@@ -70,3 +66,30 @@ def ask_ai_stream(history):
             ),
         }
 
+def ask_rag(question: str, context: str):
+    system_prompt = f"""
+You are PocketAI.
+
+Answer the user's question using ONLY the provided context.
+
+If the answer cannot be found in the context, say:
+
+"I couldn't find that information in the uploaded documents."
+
+Context:
+
+{context}
+"""
+
+    messages = [
+        {
+            "role": "system",
+            "content": system_prompt,
+        },
+        {
+            "role": "user",
+            "content": question,
+        },
+    ]
+
+    return ask_ai_stream(messages)

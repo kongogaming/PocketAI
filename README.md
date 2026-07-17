@@ -6,10 +6,13 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13+-blue.svg?logo=python&logoColor=white)](#)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/Version-v0.5.2-orange.svg)](#)
+[![Version](https://img.shields.io/badge/Version-v0.6-orange.svg)](#)
 [![Ollama](https://img.shields.io/badge/Ollama-Compatible-black?logo=ollama)](#)
 [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Android-blue)](#)
+
 [![GitHub Repo](https://img.shields.io/badge/GitHub-PocketAI-black?logo=github)](https://github.com/kongogaming/PocketAI)
+[![GitHub release](https://img.shields.io/github/v/release/kongogaming/PocketAI?color=blue)](https://github.com/kongogaming/PocketAI/releases)
+[![GitHub stars](https://img.shields.io/github/stars/kongogaming/PocketAI?style=social)](https://github.com/kongogaming/PocketAI/stargazers)
 
 **PocketAI** is an elegant terminal-based AI assistant that connects to your local **Ollama** server.
 
@@ -51,6 +54,19 @@ Whether your AI model runs on your desktop computer or on your Android phone thr
 
 ---
 
+## 🏆 Feature Comparison
+
+| Feature | PocketAI | ChatGPT Web | Local AI Web UIs |
+|---------|:---:|:---:|:---:|
+| **Offline processing** | ✅ | ❌ | ✅ |
+| **Rich Terminal UI** | ✅ | ❌ | ❌ |
+| **Zero Setup (EXE)** | ✅ | ✅ | ❌ |
+| **Android (Termux) Ready**| ✅ | ❌ | ❌ |
+| **Open Source** | ✅ | ❌ | ✅ |
+| **Document Chat (RAG)** | *v0.6* | ✅ | ⚠️ *(Varies)* |
+
+---
+
 ## 🌟 Why PocketAI?
 
 PocketAI was built for developers, students, Linux users, and AI enthusiasts who love working inside the terminal. Instead of providing another heavy browser interface, PocketAI focuses on simplicity.
@@ -81,6 +97,28 @@ If you spend most of your time in the terminal, PocketAI feels like a natural AI
 - 📤 Export Manager
 - 📚 Conversation History
 - ⚙️ Theme System
+
+---
+
+## 🏗️ Architecture
+
+PocketAI acts as a lightweight, blazing-fast bridge between your terminal and your local LLMs.
+
+```text
+       You (Terminal)
+             │
+             ▼
+       PocketAI CLI
+             │
+             ├──────────────────┐ (Hybrid Mode)
+             ▼                  ▼
+      Local PC Ollama    Android (Termux) Ollama
+             │                  │
+             └────────┬─────────┘
+                      ▼
+               Local AI Models
+
+```
 
 ---
 
@@ -115,10 +153,11 @@ PocketAI/
 
 ---
 
-## ⚙️ Requirements
+## ⚙️ Requirements & Tested Platforms
 
 ### 💻 Desktop
 
+* **Tested On:** Windows 11 ✅ | Ubuntu 24.04 ✅
 * **Python 3.13+**
 * **Git**
 * **Requests & Rich Libraries**
@@ -126,6 +165,7 @@ PocketAI/
 
 ### 📱 Android (Hybrid Mode)
 
+* **Tested On:** Android 13/14 (Termux) ✅
 * **Android Device**
 * **Termux** (via F-Droid or GitHub — *Do not use Google Play version*)
 * **Ollama for Android** (Running inside Termux)
@@ -134,7 +174,7 @@ PocketAI/
 
 ## 📥 Download
 
-The easiest way to get started with PocketAI is by downloading the latest release from the GitHub Releases page.
+The easiest way to get started with PocketAI is by downloading the latest release from the [GitHub Releases](https://www.google.com/url?sa=E&source=gmail&q=https://github.com/kongogaming/PocketAI/releases) page.
 
 ### 🪟 Windows
 
@@ -245,11 +285,25 @@ PocketAI automatically detects whether a configuration exists. **No manual confi
 
 On first launch, the interactive setup wizard will:
 
-1. Connect to your Ollama server (or prompt for your phone's IP if using Hybrid Mode)
-2. Detect installed models
-3. Recommend the best model
-4. Generate your configuration file automatically
-5. Launch the PocketAI dashboard
+1. Connect to your Ollama server (or prompt for your phone's IP if using Hybrid Mode).
+2. Detect installed models.
+3. Recommend the best model.
+4. Generate your configuration file automatically.
+5. Launch the PocketAI dashboard.
+
+### ⚙️ Configuration Example
+
+If you ever need to manually inspect the `config.json` that the wizard generates, it looks like this:
+
+```json
+{
+  "url": "[http://127.0.0.1:11434/api/chat](http://127.0.0.1:11434/api/chat)",
+  "model": "qwen2.5:1.5b",
+  "theme": "monokai",
+  "stats": true
+}
+
+```
 
 ---
 
@@ -306,6 +360,53 @@ PocketAI works with any Ollama-compatible model.
 
 ---
 
+## 🛠️ Troubleshooting
+
+### Ollama isn't detected
+
+Make sure the server is actively running. Open a new terminal window and run:
+
+```bash
+ollama serve
+
+```
+
+### No models found during Setup
+
+You need to pull at least one model before PocketAI can use it. Run:
+
+```bash
+ollama pull qwen2.5:1.5b
+
+```
+
+### Connection Refused (Hybrid Mode)
+
+If connecting from your PC to your Android phone fails, ensure your phone is broadcasting on `0.0.0.0` by running `export OLLAMA_HOST=0.0.0.0:11434` inside Termux before starting the server.
+
+---
+
+## ❓ FAQ
+
+**Does PocketAI require the Internet?**
+No, 100% of the processing happens locally on your machine once your models are downloaded.
+
+**Can I use it with any Ollama model?**
+Yes. As long as Ollama supports it, PocketAI can chat with it.
+
+**Does it work on Android?**
+Yes, using the Termux method outlined in the installation instructions.
+
+---
+
+## ⚠️ Known Limitations
+
+* Internet web search is not currently supported.
+* Requires an active Ollama server to function.
+* Document RAG functionality is not yet available (Planned for v0.6).
+
+---
+
 ## 🗺️ Roadmap
 
 ### ✅ v0.1 - v0.4
@@ -347,7 +448,7 @@ PocketAI works with any Ollama-compatible model.
 
 ---
 
-## ❤️ Built With
+## ❤️ Acknowledgements & Built With
 
 PocketAI is powered by amazing open-source projects. Huge thanks to their maintainers:
 

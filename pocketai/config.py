@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from pathlib import Path
 
 if getattr(sys, "frozen", False):
     BASE_DIR = os.path.dirname(sys.executable)

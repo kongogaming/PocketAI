@@ -1,5 +1,5 @@
 
-from config import save_config,load_config
+from config import save_config, load_config, config
 from ai import ask_ai_stream
 import os
 import random
@@ -26,6 +26,10 @@ from ui import (
     show_update,
     confirm_exit,
     goodbye,
+    show_documents,
+    show_document_info,
+    show_docs_help,
+    show_document_sources,
 )
 from setup import is_first_run, run_setup
 from theme import get_theme, get_theme_icon, get_theme_name, set_theme, list_themes
@@ -35,15 +39,35 @@ from models import list_models, current_model, set_model, model_exists, suggest_
 from exporter import export_markdown, export_text, export_pdf
 from search import search_current
 from updater import is_update_available
-
+from documents import load_documents, remove_document, clear_documents, get_document
+from rag import index_document, ask_document
+from documents import initialize as initialize_documents
+from vectors import initialize as initialize_vectors
+initialize_documents()
+initialize_vectors()
+from vectors import delete_document, clear_database, get_chunk_count
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
 
 stats_enabled = False
+document_chat = False
+
+def get_doc_status():
+    docs = load_documents()
+    count = len(docs)
+    active = config.get("active_documents")
+    if active is None:
+        active_text = "All" if count > 0 else "None"
+    elif len(active) == 0:
+        active_text = "None"
+    else:
+        active_text = str(len(active))
+    return count, active_text
 
 def main():
     global stats_enabled
-
+    global document_chat
+    
     if is_first_run():
         config = run_setup()
 
@@ -54,7 +78,8 @@ def main():
 
     clear_screen()
     set_theme(config.get("theme", "default"))
-    show_dashboard(stats_enabled)
+    doc_count, active_text = get_doc_status()
+    show_dashboard(stats_enabled, document_chat, doc_count, active_text)
 
     history = []
     while True:
@@ -77,6 +102,203 @@ def main():
                 show_history(files)
                 continue
             
+            if prompt.lower() == "/docs chat on":
+                document_chat = True
+                clear_screen()
+                doc_count, active_text = get_doc_status()
+                show_dashboard(stats_enabled, document_chat, doc_count, active_text)
+                show_success("📚 Document Chat Enabled")
+                continue
+
+            if prompt.lower() == "/docs chat off":
+                document_chat = False
+                clear_screen()
+                doc_count, active_text = get_doc_status()
+                show_dashboard(stats_enabled, document_chat, doc_count, active_text)
+                show_success("📚 Document Chat Disabled")
+                continue
+
+            elif prompt.lower().startswith("/docs use "):
+                argument = prompt[10:].strip()
+
+                if argument.lower() == "all":
+                    config["active_documents"] = None
+
+                elif argument.lower() == "none":
+                    config["active_documents"] = []
+
+                else:
+                    try:
+                        document_ids = []
+
+                        for value in argument.split():
+                            document_ids.append(int(value))
+
+                    except ValueError:
+                        show_warning(
+                            "Invalid document ID.\n\n"
+                            "Usage: /docs use <id1> <id2> ...\n"
+                            "Example: /docs use 1 3 5"
+                        )
+                        continue
+
+                    documents = load_documents()
+                    valid_ids = {doc["id"] for doc in documents}
+                    invalid = [did for did in document_ids if did not in valid_ids]
+
+                    if invalid:
+                        show_warning(
+                            f"Document ID(s) not found: {', '.join(str(i) for i in invalid)}\n\n"
+                            "Use /docs list to see available documents."
+                        )
+                        continue
+
+                    config["active_documents"] = document_ids
+
+                save_config()
+
+                active = config.get("active_documents")
+                if active is None:
+                    active_desc = "All documents"
+                elif len(active) == 0:
+                    active_desc = "No documents"
+                else:
+                    active_desc = ", ".join(str(i) for i in active)
+
+                show_success(
+                    f"Active documents updated.\n\n"
+                    f"🎯 Active: {active_desc}"
+                )
+
+                continue
+
+            elif prompt.lower().startswith("/docs remove "):
+                argument = prompt[13:].strip()
+
+                try:
+                    document_id = int(argument)
+
+                except ValueError:
+                    show_warning(
+                        "Invalid document ID.\n\n"
+                        "Usage: /docs remove <id>"
+                    )
+                    continue
+
+                success, result = remove_document(document_id)
+
+                if not success:
+                    show_warning(result)
+                    continue
+
+                try:
+                    delete_document(document_id)
+                except Exception:
+                    pass
+
+                active = config.get("active_documents")
+                if active is not None and document_id in active:
+                    active.remove(document_id)
+                    save_config()
+
+                show_success(
+                    f"Document removed.\n\n"
+                    f"📄 {result['name']}"
+                )
+
+                continue
+
+            elif prompt.lower() == "/docs clear":
+                documents = load_documents()
+
+                if not documents:
+                    show_warning("No documents to clear.")
+                    continue
+
+                show_warning(
+                    f"⚠️ This will delete all {len(documents)} indexed document(s) and their vectors."
+                )
+
+                confirm = input("\nContinue? (y/N) > ").strip().lower()
+
+                if confirm != "y":
+                    show_success("Operation cancelled.")
+                    continue
+
+                clear_documents()
+                clear_database()
+
+                config["active_documents"] = None
+                save_config()
+
+                show_success(
+                    f"All documents removed.\n\n"
+                    f"🗑️ Deleted: {len(documents)} document(s)"
+                )
+
+                continue
+
+            if prompt.lower() == "/docs list":
+                documents = load_documents()
+                active_ids = config.get("active_documents")
+                show_documents(documents, active_ids)
+                continue
+
+            if prompt.lower().startswith("/docs info "):
+                argument = prompt[11:].strip()
+
+                try:
+                    document_id = int(argument)
+                except ValueError:
+                    show_warning(
+                        "Invalid document ID.\n\n"
+                        "Usage: /docs info <id>"
+                    )
+                    continue
+
+                document = get_document(document_id)
+
+                if document is None:
+                    show_warning(
+                        f"Document with ID {document_id} not found.\n\n"
+                        "Use /docs list to see available documents."
+                    )
+                    continue
+
+                chunk_count = get_chunk_count(document_id)
+
+                active = config.get("active_documents")
+                is_active = active is None or document_id in (active or [])
+
+                show_document_info(document, chunk_count, is_active)
+                continue
+
+            if prompt.lower().startswith("/docs add "):
+                path = prompt[10:].strip().strip('"')
+
+                try:
+                    with console.status("📄 Indexing document...", spinner="dots"):
+                        document_id = index_document(path)
+
+                    document = get_document(document_id)
+                    chunk_count = get_chunk_count(document_id)
+
+                    show_success(
+                        f"Document indexed successfully.\n\n"
+                        f"🆔 ID: {document_id}\n"
+                        f"📄 Name: {document['name']}\n"
+                        f"📦 Chunks: {chunk_count}"
+                    )
+
+                except Exception as error:
+                    show_error(str(error))
+
+                continue
+
+            if prompt.lower() in ("/docs", "/docs help"):
+                show_docs_help()
+                continue
+
             if prompt.lower() == "/search":
                 show_usage(
                     "/search",
@@ -86,7 +308,7 @@ def main():
                     "/search python"
                 )
                 continue
-
+            
             if prompt.lower().startswith("/search "):
 
                 query = prompt.split(maxsplit=1)[1]
@@ -333,7 +555,8 @@ def main():
 
             if prompt.lower() == "/clear":
                 clear_screen()
-                show_dashboard(stats_enabled)
+                doc_count, active_text = get_doc_status()
+                show_dashboard(stats_enabled, document_chat, doc_count, active_text)
                 continue
 
             if prompt.lower() == "/stats on":
@@ -347,12 +570,22 @@ def main():
                 continue
             
             if prompt.lower() == "/config":
-                show_config(stats_enabled)
+                doc_count, active_text = get_doc_status()
+                show_config(stats_enabled, document_chat, doc_count, active_text)
                 continue
+            
             history.append({
                 "role": "user",
-                "content": prompt
+                "content": prompt,
             })
+
+            sources = []
+
+            if document_chat:
+                response_stream, sources = ask_document(prompt)
+            else:
+                response_stream = ask_ai_stream(history)
+                
             print()
             print(status(), end="", flush=True)
 
@@ -361,7 +594,7 @@ def main():
 
             first_chunk = True
 
-            for event in ask_ai_stream(history):
+            for event in response_stream:
 
                 if "error" in event:
                     show_error(event["error"])
@@ -389,6 +622,9 @@ def main():
                     "role": "assistant",
                     "content": full_response
                 })
+
+            if sources:
+                show_document_sources(sources)
 
             if stats_enabled and stats:
                 show_stats(stats)

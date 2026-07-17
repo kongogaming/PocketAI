@@ -104,14 +104,16 @@ def choose_model(models, recommended):
     )
     console.print(f"[green]✓ Selected:[/] {models[int(selection)-1]}")
     return models[int(selection) - 1]
-        
+
+DEFAULT_EMBEDDING_MODEL = "nomic-embed-text"
 def create_config(server, model):
     config = {
         "url": f"{server}/api/chat",
         "model": model,
-        "theme": "Nord",
+        "theme": "default",
         "stats": False,
-        "version": "0.5.2"
+        "version": "0.6.0",
+        "embedding_model": DEFAULT_EMBEDDING_MODEL
     }
     with open(CONFIG_FILE, "w", encoding="utf-8") as file:
         json.dump(config, file, indent=4)

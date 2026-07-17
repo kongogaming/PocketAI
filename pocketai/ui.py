@@ -31,6 +31,10 @@ TIPS = [
     "Reset the conversation using /reset.",
     "Clear the screen using /clear.",
     "Themes are remembered after restart.",
+    "Index documents with /docs add <path>.",
+    "Chat with documents using /docs chat on.",
+    "Use /docs list to view indexed documents.",
+    "Select specific documents with /docs use.",
 ]
 
 def get_server():
@@ -41,11 +45,12 @@ def get_server():
         .replace("/api/chat", "")
     )
 
-def show_dashboard(stats_enabled):
-    
+def show_dashboard(stats_enabled, document_chat, doc_count=0, active_text="None"):
+
     server = get_server()
 
     stats = "🟢 ON" if stats_enabled else "🔴 OFF"
+    documents_status = "🟢 ON" if document_chat else "🔴 OFF"
 
     table = create_info_table()
 
@@ -56,8 +61,12 @@ def show_dashboard(stats_enabled):
     table.add_row("🔒 Privacy", "Local Only")
     table.add_row("📦 Version", f"v{config['version']}")
     table.add_row("📊 Statistics", stats)
+    table.add_row("📄 Documents", documents_status)
+    table.add_row("📚 Indexed", str(doc_count))
+    table.add_row("🎯 Active", active_text)
     table.add_row("💬 Memory", "Conversation History")
-    table.add_row("🎨 Theme", f"{get_theme_icon()} {get_theme_name()}")   
+    table.add_row("🎨 Theme", f"{get_theme_icon()} {get_theme_name()}")
+
     console.print()
 
     show_panel(
@@ -65,6 +74,7 @@ def show_dashboard(stats_enabled):
         table,
         "Ready • Type /help for commands",
     )
+
     console.print(f"[dim]💡 Tip: {random.choice(TIPS)}[/dim]")
 
 def show_help():
@@ -93,7 +103,17 @@ def show_help():
     add_cmd("📤", "/export md", "Export conversation as Markdown")
     add_cmd("📄", "/export txt", "Export conversation as Text")
     add_cmd("📕", "/export pdf", "Export conversation as PDF")
-    
+
+    add_section("📚 DOCUMENTS")
+    add_cmd("📄", "/docs add <path>", "Index a document for RAG")
+    add_cmd("📋", "/docs list", "List indexed documents")
+    add_cmd("ℹ️", "/docs info <id>", "Show document details")
+    add_cmd("🎯", "/docs use <ids>", "Set active documents")
+    add_cmd("🗑️", "/docs remove <id>", "Remove a document")
+    add_cmd("💣", "/docs clear", "Remove all documents")
+    add_cmd("🟢", "/docs chat on", "Enable document chat")
+    add_cmd("🔴", "/docs chat off", "Disable document chat")
+
     add_section("🧠 MODELS")
     add_cmd("📦", "/models", "List installed Ollama models")
     add_cmd("🎯", "/model", "Show the current model")
@@ -155,6 +175,7 @@ def show_about():
     table.add_row("", "• Chat History Manager")
     table.add_row("", "• Theme Support")
     table.add_row("", "• Performance Statistics")
+    table.add_row("", "• Document Chat (RAG)")
 
     table.add_row("", "")
     table.add_row("❤️", "Made with Python & Rich")
@@ -165,7 +186,7 @@ def show_about():
         "Local • Private • Fast"
     )
 
-def show_config(stats_enabled):
+def show_config(stats_enabled, document_chat=False, doc_count=0, active_text="None"):
 
     server = get_server()
 
@@ -181,6 +202,12 @@ def show_config(stats_enabled):
     table.add_row("", "")
 
     table.add_row("📊 Statistics", stats)
+
+    documents_status = "🟢 Enabled" if document_chat else "🔴 Disabled"
+    table.add_row("📄 Document Chat", documents_status)
+    table.add_row("📚 Indexed", str(doc_count))
+    table.add_row("🎯 Active", active_text)
+
     table.add_row("💬 Memory", "Conversation History")
     table.add_row("💾 Storage", "./chats/")
     table.add_row("🔒 Privacy", "100% Local")
@@ -607,3 +634,106 @@ def goodbye():
             padding=(1, 2),
         )
     )
+
+def show_documents(documents, active_ids=None):
+    if not documents:
+        table = create_info_table()
+        table.add_row("📭", "No documents have been indexed yet.")
+        table.add_row("", "")
+        table.add_row("💡", "Use /docs add <path> to index a document.")
+        show_panel("📚 Indexed Documents", table, "PocketAI Documents")
+        return
+
+    theme = get_theme()
+
+    table = Table(
+        show_header=True,
+        header_style=f"bold {theme['primary']}",
+    )
+
+    table.add_column("#", style=theme["secondary"], width=4, justify="right")
+    table.add_column("Name", style="bold")
+    table.add_column("Type")
+    table.add_column("Size")
+    table.add_column("Added")
+    table.add_column("Active")
+
+    for document in documents:
+        size = document["size"] / 1024
+
+        if size >= 1024:
+            size_text = f"{size / 1024:.2f} MB"
+        else:
+            size_text = f"{size:.2f} KB"
+
+        if active_ids is None:
+            active = "✅"
+        elif document["id"] in active_ids:
+            active = "✅"
+        else:
+            active = "—"
+
+        table.add_row(
+            str(document["id"]),
+            document["name"],
+            document["type"].upper(),
+            size_text,
+            document["added"],
+            active,
+        )
+
+    footer = Text(
+        f"\n📚 Total Documents: {len(documents)}",
+        style="bold green",
+    )
+    content = Group(table, footer)
+    show_panel("📚 Indexed Documents", content, "PocketAI Documents")
+
+
+def show_document_info(document, chunk_count=0, is_active=False):
+    size = document["size"] / 1024
+
+    if size >= 1024:
+        size_text = f"{size / 1024:.2f} MB"
+    else:
+        size_text = f"{size:.2f} KB"
+
+    table = create_info_table()
+
+    table.add_row("🆔 ID", str(document["id"]))
+    table.add_row("📄 Name", document["name"])
+    table.add_row("📁 Type", document["type"].upper())
+    table.add_row("📏 Size", size_text)
+    table.add_row("📅 Added", document["added"])
+    table.add_row("📦 Chunks", str(chunk_count))
+    table.add_row("🎯 Active", "✅ Yes" if is_active else "❌ No")
+
+    show_panel("📄 Document Info", table, "PocketAI Documents")
+
+
+def show_docs_help():
+    table = create_info_table()
+
+    table.add_row("📄 /docs add <path>", "Index a document")
+    table.add_row("📋 /docs list", "List indexed documents")
+    table.add_row("ℹ️  /docs info <id>", "Show document details")
+    table.add_row("🎯 /docs use <ids>", "Set active documents")
+    table.add_row("🗑️  /docs remove <id>", "Remove a document")
+    table.add_row("💣 /docs clear", "Remove all documents")
+    table.add_row("🟢 /docs chat on", "Enable document chat")
+    table.add_row("🔴 /docs chat off", "Disable document chat")
+    table.add_row("", "")
+    table.add_row("💡 /docs use all", "Use all documents")
+    table.add_row("💡 /docs use none", "Use no documents")
+    table.add_row("💡 /docs use 1 3 5", "Use specific documents")
+
+    show_panel("📚 Document Commands", table, "PocketAI Help")
+
+
+def show_document_sources(sources):
+    table = create_info_table()
+
+    for name in sources:
+        table.add_row("📄", name)
+
+    show_panel("📚 Sources", table)
